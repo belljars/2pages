@@ -1,8 +1,11 @@
-import sqlite3
 import os
+import sqlite3
 from datetime import datetime, timezone
 
-DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'archive.db'))
+DEFAULT_DB_PATH = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '..', '..', 'archive.db')
+)
+DB_PATH = os.path.abspath(os.environ.get('TWOPAGES_DB_PATH', DEFAULT_DB_PATH))
 
 
 def get_connection():
@@ -36,10 +39,10 @@ def add_entry(type_, content, filename=None, mimetype=None):
         return cursor.lastrowid
 
 
-def get_entry(page):
+def get_entries():
     with get_connection() as conn:
-        row = conn.execute('SELECT * FROM entries WHERE id = ?', (page,)).fetchone()
-    return dict(row) if row else None
+        rows = conn.execute('SELECT * FROM entries ORDER BY id').fetchall()
+    return [dict(row) for row in rows]
 
 
 def get_count():

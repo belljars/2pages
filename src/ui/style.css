@@ -44,7 +44,9 @@ button:disabled {
 .page {
   flex: 1;
   padding: 2rem;
+  padding-bottom: 4rem;
   overflow: auto;
+  position: relative;
 }
 
 .page.full {
@@ -56,6 +58,38 @@ footer {
   font-size: 0.75rem;
   color: #000;
   flex-shrink: 0;
+  display: none;
+}
+
+.page::after {
+  content: attr(data-page-number);
+  position: absolute;
+  left: 50%;
+  bottom: 1.25rem;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* gap when entry type changes between stacked entries */
+.entry-break {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+}
+
+.entry-code-break {
+  margin-top: 1.6rem;
+  padding-top: 1.35rem;
+}
+
+.entry-file-break {
+  margin-top: 1.6rem;
+  padding-top: 1.35rem;
+}
+
+.entry-full-page {
+  height: 100%;
 }
 
 /* entry types */
@@ -72,6 +106,7 @@ footer {
   overflow: auto;
   font-size: 0.8rem;
   line-height: 1.5;
+  padding-bottom: 0.35rem;
 }
 
 .entry-link {
@@ -116,6 +151,84 @@ footer {
 
 .entry-file a {
   color: #000;
+}
+
+.entry-file-text {
+  word-break: normal;
+}
+
+.entry-file-header {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 0.6rem;
+  font-size: 0.75rem;
+}
+
+.entry-file-name {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.entry-file-preview {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.entry-file-markdown {
+  white-space: normal;
+}
+
+.entry-file-markdown > * + * {
+  margin-top: 0.8rem;
+}
+
+.entry-file-markdown h1,
+.entry-file-markdown h2,
+.entry-file-markdown h3,
+.entry-file-markdown h4,
+.entry-file-markdown h5,
+.entry-file-markdown h6 {
+  line-height: 1.25;
+}
+
+.entry-file-markdown h1 {
+  font-size: 1.35rem;
+}
+
+.entry-file-markdown h2 {
+  font-size: 1.15rem;
+}
+
+.entry-file-markdown h3,
+.entry-file-markdown h4,
+.entry-file-markdown h5,
+.entry-file-markdown h6 {
+  font-size: 1rem;
+}
+
+.entry-file-markdown ul {
+  padding-left: 1.25rem;
+}
+
+.entry-file-markdown li + li {
+  margin-top: 0.3rem;
+}
+
+.entry-file-markdown a {
+  color: #000;
+}
+
+.entry-file-markdown code {
+  font-family: inherit;
+  font-size: 0.95em;
+}
+
+.entry-file-markdown pre {
+  overflow: auto;
+  white-space: pre;
+  padding-bottom: 0.35rem;
 }
 
 .entry-meta {

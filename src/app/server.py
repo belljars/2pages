@@ -7,7 +7,7 @@ import sys
 import urllib.parse
 
 sys.path.insert(0, os.path.dirname(__file__))
-from db import init_db, get_entry, get_count
+from db import init_db, get_entries, get_count
 
 UI_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'ui'))
 PORT = 7267
@@ -49,13 +49,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         path = urllib.parse.urlparse(self.path).path
 
-        m = re.match(r'^/api/page/(\d+)$', path)
-        if m:
-            entry = get_entry(int(m.group(1)))
-            if entry is None:
-                self.send_json({'error': 'not found'}, 404)
-            else:
-                self.send_json(entry)
+        if path == '/api/entries':
+            self.send_json({'entries': get_entries()})
             return
 
         if path == '/api/count':

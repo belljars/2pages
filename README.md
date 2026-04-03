@@ -31,6 +31,24 @@ Or use the helper script directly:
 
 Then open `http://localhost:7267`.
 
+## Test Script
+
+Run the fixture-based test runner:
+
+```bash
+./script/test
+```
+
+It loads files from `test/`, writes into a temporary SQLite database, and verifies that text, code, image, video, and generic file imports are stored correctly.
+
+To load the same fixture data into the real app database so it appears in the UI:
+
+```bash
+./script/load-test-data
+```
+
+That command writes directly into `archive.db`, unlike `./script/test`, which uses a temporary database and deletes it after verification.
+
 ## Adding Entries
 
 ```bash

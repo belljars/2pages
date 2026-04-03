@@ -24,12 +24,12 @@ def main():
     init_db()
 
     if args.link:
-        page = add_entry('link', args.link)
-        print(f'saved link as page {page}')
+        entry_id = add_entry('link', args.link)
+        print(f'saved link as entry {entry_id}')
 
     elif args.code:
-        page = add_entry('code', args.code)
-        print(f'saved code snippet as page {page}')
+        entry_id = add_entry('code', args.code)
+        print(f'saved code snippet as entry {entry_id}')
 
     elif args.file:
         path = args.file
@@ -48,12 +48,12 @@ def main():
         mime_str = mimetype or 'application/octet-stream'
         content = f'data:{mime_str};base64,{data}'
         filename = os.path.basename(path)
-        page = add_entry(type_, content, filename=filename, mimetype=mimetype)
-        print(f'saved {type_} "{filename}" as page {page}')
+        entry_id = add_entry(type_, content, filename=filename, mimetype=mimetype)
+        print(f'saved {type_} "{filename}" as entry {entry_id}')
 
     elif args.text:
-        page = add_entry('text', args.text)
-        print(f'saved text as page {page}')
+        entry_id = add_entry('text', args.text)
+        print(f'saved text as entry {entry_id}')
 
     else:
         if sys.stdin.isatty():
@@ -63,8 +63,8 @@ def main():
         if not text:
             parser.print_help()
             sys.exit(1)
-        page = add_entry('text', text)
-        print(f'saved text as page {page}')
+        entry_id = add_entry('text', text)
+        print(f'saved text as entry {entry_id}')
 
 
 if __name__ == '__main__':
