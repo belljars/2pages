@@ -10,6 +10,9 @@ const FULL_TYPES = new Set(['image', 'video']);
 let total   = 0;
 let current = 1; // page number shown on the left (or alone)
 
+// entries currently on screen — go() reads these instead of re-fetching
+const spread = { left: null, right: null };
+
 const pageCache = new Map();
 
 async function fetchPage(n) {
@@ -99,6 +102,12 @@ function emptyEl(msg) {
   return el;
 }
 
+function prefetch() {
+  fetchPage(current - 1);
+  fetchPage(current + 2);
+  fetchPage(current + 3);
+}
+
 async function render() {
   const left = await fetchPage(current);
 
@@ -114,6 +123,10 @@ async function render() {
 
     btnPrev.disabled = current <= 1;
     btnNext.disabled = current >= total;
+
+    spread.left  = left;
+    spread.right = null;
+    prefetch();
     return;
   }
 
@@ -145,30 +158,32 @@ async function render() {
 
   btnPrev.disabled = current <= 1;
   btnNext.disabled = current >= total;
+
+  spread.left  = left;
+  spread.right = right;
+  prefetch();
 }
 
 async function go(dir) {
-  const left = await fetchPage(current);
-  const isFull = left && FULL_TYPES.has(left.type);
+  const isFull = spread.left && FULL_TYPES.has(spread.left.type);
 
   if (dir > 0) {
     if (isFull) {
       current = Math.min(total, current + 1);
     } else {
-      const right = await fetchPage(current + 1);
-      if (!right) return;
-      current = FULL_TYPES.has(right.type)
+      if (!spread.right) return;
+      current = FULL_TYPES.has(spread.right.type)
         ? current + 1
         : Math.min(total, current + 2);
     }
   } else {
     if (current <= 1) return;
-    const prev = await fetchPage(current - 1);
-    if (!prev) return;
-    if (FULL_TYPES.has(prev.type) || isFull) {
+    if (isFull) {
       current = current - 1;
     } else {
-      current = Math.max(1, current - 2);
+      const prev = await fetchPage(current - 1);
+      if (!prev) return;
+      current = FULL_TYPES.has(prev.type) ? current - 1 : Math.max(1, current - 2);
     }
   }
 
@@ -189,7 +204,7 @@ async function init() {
   total = count;
 
   if (total === 0) {
-    elLeft.replaceChildren(emptyEl('archive is empty\nadd something:\nlog "your text"'));
+    elLeft.replaceChildren(emptyEl('archive is empty\nadd something:\n2p "your text"'));
     elRight.style.display = 'none';
     elInfo.textContent = '0';
     btnPrev.disabled = true;
