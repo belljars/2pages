@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# log — add entries to your 2pages archive, or start the viewer
+#
+# Install (run once):
+#   ln -sf /path/to/2pages/script/log ~/.local/bin/log
+#
+# Usage:
+#   log                        start the server  (http://localhost:7267)
+#   log --serve                start the server  (explicit)
+#   log "some text"            save raw text
+#   log --link https://…       save a URL
+#   log --code "snippet"       save a code snippet
+#   log --file path/to/file    save an image, video, or other file
+#   echo "text" | log          save text from stdin
+
+set -e
+
+# Resolve the real path of this script even when called through a symlink
+_src="${BASH_SOURCE[0]}"
+while [ -L "$_src" ]; do
+    _src="$(readlink "$_src")"
+done
+ROOT_DIR="$(cd "$(dirname "$_src")/.." && pwd)"
+
+PYTHON="${PYTHON:-python3}"
+SERVER="$ROOT_DIR/src/app/server.py"
+ADD="$ROOT_DIR/src/app/add.py"
+
+if [[ $# -eq 0 || "$1" == "--serve" ]]; then
+    exec "$PYTHON" "$SERVER"
+fi
+
+exec "$PYTHON" "$ADD" "$@"

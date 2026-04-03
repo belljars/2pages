@@ -1,0 +1,10 @@
+# archive data
+archive.db
+
+# python
+__pycache__/
+*.py[cod]
+
+# os
+.DS_Store
+Thumbs.db
