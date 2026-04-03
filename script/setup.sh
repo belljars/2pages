@@ -3,7 +3,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
-LOG_SCRIPT="$SCRIPT_DIR/log"
+APP_SCRIPT="$SCRIPT_DIR/2p"
 INSTALL_DIR="$HOME/.local/bin"
 
 # init database
@@ -16,10 +16,10 @@ init_db()
 EOF
 echo "database ready."
 
-# install log command
+# install 2p command
 mkdir -p "$INSTALL_DIR"
-ln -sf "$LOG_SCRIPT" "$INSTALL_DIR/log"
-echo "installed: $INSTALL_DIR/log -> $LOG_SCRIPT"
+ln -sf "$APP_SCRIPT" "$INSTALL_DIR/2p"
+echo "installed: $INSTALL_DIR/2p -> $APP_SCRIPT"
 
 # warn if ~/.local/bin isn't on PATH
 if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
@@ -30,7 +30,7 @@ if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
 fi
 
 echo ""
-echo "start the viewer:   log"
-echo "add something:      log \"your text here\""
-echo "add a link:         log --link https://example.com"
-echo "add a file:         log --file path/to/image.png"
+echo "start the viewer:   2p"
+echo "add something:      2p \"your text here\""
+echo "add a link:         2p --link https://example.com"
+echo "add a file:         2p --file path/to/image.png"

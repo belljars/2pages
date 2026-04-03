@@ -1,50 +1,48 @@
 # 2pages
 
-Minimal personal archive. Save text, links, code snippets, images, videos, and other files from the terminal, then browse them in a local two-page viewer.
+Small local archive for saving short text, links, code snippets, and files, then browsing them in a simple two-page viewer.
 
 ## What It Does
 
-- Stores entries in a local SQLite database at `archive.db`
-- Starts a local viewer at `http://localhost:7267`
-- Shows text, code, links, files, images, and videos
-- Renders images and videos as full-spread pages
+- Stores entries in a local SQLite database (`archive.db`)
+- Serves a small browser UI at `http://localhost:7267`
+- Includes a `2p` helper command for adding entries or starting the viewer
 
-This project is plain Python, HTML, CSS, and JavaScript. There is no Node setup or package manager step.
+## Repo Layout
 
-## Setup
+- `src/app/` Python backend and database code
+- `src/ui/` Static frontend files
+- `script/2p` Main helper script
+- `script/setup.sh` Optional setup script
 
-```bash
-bash script/setup.sh
-```
+## Quick Start
 
-This does two things:
-
-- Initializes `archive.db`
-- Installs the `log` command as `~/.local/bin/log`
-
-If `~/.local/bin` is not on your `PATH`, add it in your shell config:
+Run the setup script once:
 
 ```bash
-export PATH="$HOME/.local/bin:$PATH"
+./script/setup.sh
 ```
 
-## Usage
+Or use the helper script directly:
 
 ```bash
-log                          # start the viewer at http://localhost:7267
-log --serve                  # same as above
-log "some text"              # save raw text
-log --link https://…         # save a URL
-log --code "snippet"         # save a code snippet
-log --file path/to/file      # save an image, video, or other file
-echo "text" | log            # save text from stdin
+./script/2p
 ```
 
-With no arguments, `log` starts the local server. With arguments, it adds an entry to the archive.
+Then open `http://localhost:7267`.
+
+## Adding Entries
+
+```bash
+./script/2p "your text here"
+./script/2p --link https://example.com
+./script/2p --code 'print("hello")'
+./script/2p --file path/to/file.png
+echo "piped text" | ./script/2p
+```
 
 ## Notes
 
-- Page numbers correspond to entry IDs in the database
-- Navigation starts at page `1`
-- Text, code, link, and generic file entries can share a spread
-- Image and video entries take the full spread by themselves
+- The database file is created at the repo root as `archive.db`
+- `script/setup.sh` installs `script/2p` as `~/.local/bin/2p`
+- The app uses Python standard library modules plus SQLite, so no dependency install step is currently required
