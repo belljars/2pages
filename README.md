@@ -1,67 +1,38 @@
 # 2pages
 
-Small local archive for saving short text, links, code snippets, and files, then browsing them in a simple two-page viewer.
+A small local archive for short text, links, code snippets, and files.
 
-## What It Does
-
-- Stores entries in a local SQLite database (`archive.db`)
-- Serves a small browser UI at `http://localhost:7267`
-- Includes a `2p` helper command for adding entries or starting the viewer
-
-## Repo Layout
-
-- `src/app/` Python backend and database code
-- `src/ui/` Static frontend files
-- `script/2p` Main helper script
-- `script/setup.sh` Optional setup script
-
-## Quick Start
-
-Run the setup script once:
+## Setup
 
 ```bash
 ./script/setup.sh
 ```
 
-Or use the helper script directly:
+This initializes the database and installs the `2p` command to `~/.local/bin/2p`.
+
+## Usage
+
+Start the viewer:
 
 ```bash
-./script/2p
+2p
 ```
 
-Then open `http://localhost:7267`.
+Open `http://localhost:7267`.
 
-## Test Script
+Add content:
 
-Run the fixture-based test runner:
+```bash
+2p "some text"
+2p --link https://example.com
+2p --q "A short quote"
+2p --c 'print("hello")'
+2p --f path/to/file
+echo "text from stdin" | 2p
+```
+
+## Test
 
 ```bash
 ./script/test
 ```
-
-It loads files from `test/`, writes into a temporary SQLite database, and verifies that text, code, image, video, and generic file imports are stored correctly.
-
-To load the same fixture data into the real app database so it appears in the UI:
-
-```bash
-./script/load-test-data
-```
-
-That command writes directly into `archive.db`, unlike `./script/test`, which uses a temporary database and deletes it after verification.
-
-## Adding Entries
-
-```bash
-./script/2p "your text here"
-./script/2p --link https://example.com
-./script/2p --quote "quoted text"
-./script/2p --code 'print("hello")'
-./script/2p --file path/to/file.png
-echo "piped text" | ./script/2p
-```
-
-## Notes
-
-- The database file is created at the repo root as `archive.db`
-- `script/setup.sh` installs `script/2p` as `~/.local/bin/2p`
-- The app uses Python standard library modules plus SQLite, so no dependency install step is currently required
