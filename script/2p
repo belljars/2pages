@@ -9,6 +9,7 @@
 #   2p --serve                 start the server  (explicit)
 #   2p "some text"             save raw text
 #   2p --link https://…        save a URL
+#   2p --quote "text"          save text as a quote
 #   2p --code "snippet"        save a code snippet
 #   2p --file path/to/file     save an image, video, or other file
 #   echo "text" | 2p           save text from stdin

@@ -200,6 +200,11 @@ function buildEntry(entry) {
       }
       break;
     }
+    case 'quote': {
+      body.className = 'entry-quote';
+      body.textContent = entry.content;
+      break;
+    }
     case 'code': {
       body.className = 'entry-file entry-file-text';
 

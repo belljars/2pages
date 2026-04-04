@@ -54,6 +54,7 @@ That command writes directly into `archive.db`, unlike `./script/test`, which us
 ```bash
 ./script/2p "your text here"
 ./script/2p --link https://example.com
+./script/2p --quote "quoted text"
 ./script/2p --code 'print("hello")'
 ./script/2p --file path/to/file.png
 echo "piped text" | ./script/2p

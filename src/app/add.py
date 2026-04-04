@@ -17,6 +17,7 @@ def main():
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--link', metavar='URL', help='save a URL')
     group.add_argument('--code', metavar='SNIPPET', help='save a code snippet')
+    group.add_argument('--quote', metavar='TEXT', help='save text as a quote')
     group.add_argument('--file', metavar='PATH', help='save a file (image, video, or other)')
     parser.add_argument('text', nargs='?', help='raw text to save')
 
@@ -30,6 +31,10 @@ def main():
     elif args.code:
         entry_id = add_entry('code', args.code)
         print(f'saved code snippet as entry {entry_id}')
+
+    elif args.quote:
+        entry_id = add_entry('quote', args.quote)
+        print(f'saved quote as entry {entry_id}')
 
     elif args.file:
         path = args.file

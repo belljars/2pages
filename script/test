@@ -43,6 +43,7 @@ PY
 code_text="${code_text%__TWOPAGES_SENTINEL__}"
 
 printf '%s' "$stdin_text" | "$PYTHON" "$ADD"
+"$PYTHON" "$ADD" --quote "A quoted line for the UI"
 "$PYTHON" "$ADD" --code "$code_text"
 "$PYTHON" "$ADD" --file "$FIXTURES_DIR/test.json"
 "$PYTHON" "$ADD" --file "$FIXTURES_DIR/bye.sh"
@@ -67,10 +68,11 @@ rows = conn.execute(
     "SELECT id, type, content, filename, mimetype FROM entries ORDER BY id"
 ).fetchall()
 
-assert len(rows) == 7, f"expected 7 entries, found {len(rows)}"
+assert len(rows) == 8, f"expected 8 entries, found {len(rows)}"
 
 expected = [
     {"type": "text", "path": os.path.join(fixtures_dir, "hello.md"), "mode": "text-stdin"},
+    {"type": "quote", "content": "A quoted line for the UI", "mode": "quote"},
     {"type": "code", "path": os.path.join(fixtures_dir, "hello.py"), "mode": "code"},
     {"type": "file", "path": os.path.join(fixtures_dir, "test.json"), "mode": "file"},
     {"type": "file", "path": os.path.join(fixtures_dir, "bye.sh"), "mode": "file"},
@@ -84,23 +86,30 @@ expected = [
 ]
 
 for index, (row, spec) in enumerate(zip(rows, expected), start=1):
-    path = spec["path"]
     assert row["type"] == spec["type"], (
         f"entry {index}: expected type {spec['type']}, got {row['type']}"
     )
     if spec["mode"] == "text-stdin":
+        path = spec["path"]
         expected_text = open(path, "r", encoding="utf-8").read().strip()
         assert row["content"] == expected_text, f"entry {index}: text content mismatch"
         assert row["filename"] is None, f"entry {index}: unexpected filename"
         assert row["mimetype"] is None, f"entry {index}: unexpected mimetype"
         continue
+    if spec["mode"] == "quote":
+        assert row["content"] == spec["content"], f"entry {index}: quote content mismatch"
+        assert row["filename"] is None, f"entry {index}: unexpected filename"
+        assert row["mimetype"] is None, f"entry {index}: unexpected mimetype"
+        continue
     if spec["mode"] == "code":
+        path = spec["path"]
         expected_text = open(path, "r", encoding="utf-8").read()
         assert row["content"] == expected_text, f"entry {index}: code content mismatch"
         assert row["filename"] is None, f"entry {index}: unexpected filename"
         assert row["mimetype"] is None, f"entry {index}: unexpected mimetype"
         continue
 
+    path = spec["path"]
     expected_mimetype, _ = mimetypes.guess_type(path)
     expected_mimetype = expected_mimetype or "application/octet-stream"
     assert row["filename"] == os.path.basename(path), (
