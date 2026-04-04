@@ -31,8 +31,3 @@ Add content:
 echo "text from stdin" | 2p
 ```
 
-## Test
-
-```bash
-./script/test
-```
