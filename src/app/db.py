@@ -72,9 +72,14 @@ def init_db():
                 content  TEXT    NOT NULL,
                 filename TEXT,
                 mimetype TEXT,
+                size     TEXT,
                 added_at TEXT    NOT NULL
             )
         ''')
+        try:
+            conn.execute('ALTER TABLE entries ADD COLUMN size TEXT')
+        except Exception:
+            pass  # column already exists
         conn.execute('''
             CREATE TABLE IF NOT EXISTS settings (
                 key   TEXT PRIMARY KEY,
@@ -83,12 +88,12 @@ def init_db():
         ''')
 
 
-def add_entry(type_, content, filename=None, mimetype=None):
+def add_entry(type_, content, filename=None, mimetype=None, size=None):
     added_at = datetime.now(timezone.utc).isoformat()
     with get_connection() as conn:
         cursor = conn.execute(
-            'INSERT INTO entries (type, content, filename, mimetype, added_at) VALUES (?, ?, ?, ?, ?)',
-            (type_, content, filename, mimetype, added_at),
+            'INSERT INTO entries (type, content, filename, mimetype, size, added_at) VALUES (?, ?, ?, ?, ?, ?)',
+            (type_, content, filename, mimetype, size, added_at),
         )
         return cursor.lastrowid
 

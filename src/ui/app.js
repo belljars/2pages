@@ -5,7 +5,7 @@ const btnPrev = document.getElementById('prev');
 const btnNext = document.getElementById('next');
 
 // types that get a full page to themselves
-const FULL_TYPES = new Set(['image', 'video', 'empty_page']);
+const FULL_TYPES = new Set(['empty_page']);
 
 let entries = [];
 let total = 0;
@@ -241,7 +241,8 @@ function buildEntry(entry) {
       break;
     }
     case 'image': {
-      body.className = 'entry-image';
+      const imgSize = entry.size || 'medium';
+      body.className = `entry-image media-${imgSize}`;
       const img = document.createElement('img');
       img.src = entry.content;
       img.alt = entry.filename || '';
@@ -249,7 +250,8 @@ function buildEntry(entry) {
       break;
     }
     case 'video': {
-      body.className = 'entry-video';
+      const videoSize = entry.size || 'medium';
+      body.className = `entry-video media-${videoSize}`;
       const video = document.createElement('video');
       video.src = entry.content;
       video.controls = true;
@@ -345,6 +347,11 @@ async function fillPage(el, startIndex) {
   while (index >= 0 && index < total) {
     const entry = getEntry(index);
     if (!entry) break;
+    if (entry.type === 'page_break') {
+      index++;
+      if (placed > 0) break;
+      continue;
+    }
     if (FULL_TYPES.has(entry.type) && placed > 0) break;
 
     const node = buildEntry(entry);

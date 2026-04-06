@@ -142,30 +142,20 @@ footer {
   color: var(--fg);
 }
 
-.entry-image {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
-
-.entry-image img {
-  max-width: 100%;
-  max-height: 100%;
-  display: block;
-}
-
-.entry-video {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
-
+.entry-image img,
 .entry-video video {
-  max-width: 100%;
-  max-height: 100%;
   display: block;
+  max-width: 100%;
+}
+
+.entry-image.media-small img,
+.entry-video.media-small video {
+  max-width: 30%;
+}
+
+.entry-image.media-medium img,
+.entry-video.media-medium video {
+  max-width: 60%;
 }
 
 .entry-empty-page {

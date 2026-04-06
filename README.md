@@ -30,6 +30,7 @@ Add content:
 2p --q "A short quote"
 2p --c 'print("hello")'
 2p --f path/to/file
+2p --new-page "start this on the next page"
 2p --e
 2p --db ~/journals/archive.db
 2p --ui dark
