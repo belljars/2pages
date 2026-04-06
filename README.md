@@ -1,6 +1,6 @@
 # 2pages
 
-A small local archive for short text, links, code snippets, and files.
+A small local archive for short text, links, code snippets, and files. Learn to be content with the natural mess of a scrapbook.w
 
 ## Setup
 
@@ -28,6 +28,7 @@ Add content:
 2p --q "A short quote"
 2p --c 'print("hello")'
 2p --f path/to/file
+2p --e
+2p --ui dark
 echo "text from stdin" | 2p
 ```
-

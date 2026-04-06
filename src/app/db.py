@@ -27,6 +27,12 @@ def init_db():
                 added_at TEXT    NOT NULL
             )
         ''')
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS settings (
+                key   TEXT PRIMARY KEY,
+                value TEXT NOT NULL
+            )
+        ''')
 
 
 def add_entry(type_, content, filename=None, mimetype=None):
@@ -48,3 +54,25 @@ def get_entries():
 def get_count():
     with get_connection() as conn:
         return conn.execute('SELECT COUNT(*) FROM entries').fetchone()[0]
+
+
+def set_setting(key, value):
+    with get_connection() as conn:
+        conn.execute(
+            '''
+            INSERT INTO settings (key, value) VALUES (?, ?)
+            ON CONFLICT(key) DO UPDATE SET value = excluded.value
+            ''',
+            (key, value),
+        )
+
+
+def get_setting(key, default=None):
+    with get_connection() as conn:
+        row = conn.execute(
+            'SELECT value FROM settings WHERE key = ?',
+            (key,),
+        ).fetchone()
+    if row is None:
+        return default
+    return row[0]

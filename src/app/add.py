@@ -6,7 +6,9 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
-from db import init_db, add_entry
+from db import init_db, add_entry, set_setting
+
+UI_MODES = {'light', 'dark'}
 
 
 def main():
@@ -20,6 +22,8 @@ def main():
     group.add_argument('--code', '--c', metavar='SNIPPET', dest='code', help='save a code snippet')
     group.add_argument('--quote', '--q', metavar='TEXT', dest='quote', help='save text as a quote')
     group.add_argument('--file', '--f', metavar='PATH', dest='file', help='save a file (image, video, or other)')
+    group.add_argument('--empty-page', '--e', action='store_true', dest='empty_page', help='insert an intentional empty page')
+    group.add_argument('--ui', metavar='MODE', dest='ui', help='set viewer theme: light or dark')
     parser.add_argument('text', nargs='?', help='raw text to save')
 
     args = parser.parse_args()
@@ -56,6 +60,18 @@ def main():
         filename = os.path.basename(path)
         entry_id = add_entry(type_, content, filename=filename, mimetype=mimetype)
         print(f'saved {type_} "{filename}" as entry {entry_id}')
+
+    elif args.empty_page:
+        entry_id = add_entry('empty_page', '')
+        print(f'saved intentional empty page as entry {entry_id}')
+
+    elif args.ui:
+        mode = args.ui.lower()
+        if mode not in UI_MODES:
+            print(f"error: invalid ui mode: {args.ui} (expected: light or dark)", file=sys.stderr)
+            sys.exit(1)
+        set_setting('ui_mode', mode)
+        print(f'set ui mode to {mode}')
 
     elif args.text:
         entry_id = add_entry('text', args.text)

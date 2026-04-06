@@ -4,10 +4,24 @@
   padding: 0;
 }
 
+:root {
+  --bg: #fff;
+  --fg: #000;
+  --muted: #999;
+  --empty: #ccc;
+}
+
+body[data-theme="dark"] {
+  --bg: #050505;
+  --fg: #f2f2f2;
+  --muted: #8d8d8d;
+  --empty: #5c5c5c;
+}
+
 body {
   font-family: monospace;
-  background: #fff;
-  color: #000;
+  background: var(--bg);
+  color: var(--fg);
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -27,7 +41,7 @@ button {
   cursor: pointer;
   font-family: monospace;
   font-size: 1rem;
-  color: #000;
+  color: var(--fg);
 }
 
 button:disabled {
@@ -56,7 +70,7 @@ button:disabled {
 footer {
   padding: 0.75rem 1.5rem;
   font-size: 0.75rem;
-  color: #000;
+  color: var(--fg);
   flex-shrink: 0;
   display: none;
 }
@@ -107,7 +121,7 @@ footer {
   line-height: 1.7;
   font-size: 1rem;
   padding-left: 1.1rem;
-  border-left: 2px solid #000;
+  border-left: 2px solid var(--fg);
   font-style: italic;
 }
 
@@ -125,7 +139,7 @@ footer {
 }
 
 .entry-link a {
-  color: #000;
+  color: var(--fg);
 }
 
 .entry-image {
@@ -154,13 +168,17 @@ footer {
   display: block;
 }
 
+.entry-empty-page {
+  height: 100%;
+}
+
 .entry-file {
   font-size: 0.85rem;
   word-break: break-all;
 }
 
 .entry-file a {
-  color: #000;
+  color: var(--fg);
 }
 
 .entry-file-text {
@@ -227,7 +245,7 @@ footer {
 }
 
 .entry-file-markdown a {
-  color: #000;
+  color: var(--fg);
 }
 
 .entry-file-markdown code {
@@ -243,7 +261,7 @@ footer {
 
 .entry-meta {
   font-size: 0.7rem;
-  color: #999;
+  color: var(--muted);
   margin-bottom: 1rem;
 }
 
@@ -252,7 +270,7 @@ footer {
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #ccc;
+  color: var(--empty);
   font-size: 0.8rem;
   text-align: center;
   line-height: 1.8;

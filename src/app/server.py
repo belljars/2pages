@@ -7,7 +7,7 @@ import sys
 import urllib.parse
 
 sys.path.insert(0, os.path.dirname(__file__))
-from db import init_db, get_entries, get_count
+from db import init_db, get_entries, get_count, get_setting
 
 UI_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'ui'))
 PORT = 7267
@@ -55,6 +55,10 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
         if path == '/api/count':
             self.send_json({'count': get_count()})
+            return
+
+        if path == '/api/settings':
+            self.send_json({'ui_mode': get_setting('ui_mode', 'light')})
             return
 
         # static files served from memory

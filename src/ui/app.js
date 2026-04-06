@@ -5,7 +5,7 @@ const btnPrev = document.getElementById('prev');
 const btnNext = document.getElementById('next');
 
 // types that get a full page to themselves
-const FULL_TYPES = new Set(['image', 'video']);
+const FULL_TYPES = new Set(['image', 'video', 'empty_page']);
 
 let entries = [];
 let total = 0;
@@ -37,6 +37,12 @@ async function fetchEntries() {
   if (!res.ok) return [];
   const data = await res.json();
   return data.entries || [];
+}
+
+async function fetchSettings() {
+  const res = await fetch('/api/settings');
+  if (!res.ok) return { ui_mode: 'light' };
+  return res.json();
 }
 
 function getEntry(index) {
@@ -250,6 +256,10 @@ function buildEntry(entry) {
       body.appendChild(video);
       break;
     }
+    case 'empty_page': {
+      body.className = 'entry-empty-page';
+      break;
+    }
     case 'file': {
       if (isTextFile(entry)) {
         body.className = 'entry-file entry-file-text';
@@ -400,8 +410,7 @@ async function render() {
   const rightFirst   = getEntry(rightStart);
 
   if (!rightFirst) {
-    elRight.style.display = 'none';
-    setPageNumber(elRight, null);
+    elRight.replaceChildren();
     spread.lastIndex = rightStart - 1;
   } else {
     const afterRight = await fillPage(elRight, rightStart);
@@ -436,6 +445,9 @@ document.addEventListener('keydown', (e) => {
 });
 
 async function init() {
+  const settings = await fetchSettings();
+  document.body.dataset.theme = settings.ui_mode || 'light';
+
   entries = await fetchEntries();
   total = entries.length;
 
