@@ -1,15 +1,63 @@
 import os
+import json
 import sqlite3
 from datetime import datetime, timezone
 
-DEFAULT_DB_PATH = os.path.abspath(
+LEGACY_DEFAULT_DB_PATH = os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..', '..', 'archive.db')
 )
-DB_PATH = os.path.abspath(os.environ.get('TWOPAGES_DB_PATH', DEFAULT_DB_PATH))
+CONFIG_PATH = os.path.join(
+    os.path.expanduser(os.environ.get('XDG_CONFIG_HOME', '~/.config')),
+    '2pages',
+    'config.json',
+)
+
+
+def normalize_db_path(path):
+    return os.path.abspath(os.path.expanduser(path))
+
+
+def load_config():
+    try:
+        with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        return {}
+    except json.JSONDecodeError:
+        return {}
+    if not isinstance(data, dict):
+        return {}
+    return data
+
+
+def save_config(data):
+    os.makedirs(os.path.dirname(CONFIG_PATH), exist_ok=True)
+    with open(CONFIG_PATH, 'w', encoding='utf-8') as f:
+        json.dump(data, f)
+
+
+def get_db_path():
+    env_path = os.environ.get('TWOPAGES_DB_PATH')
+    if env_path:
+        return normalize_db_path(env_path)
+
+    config_path = load_config().get('db_path')
+    if isinstance(config_path, str) and config_path.strip():
+        return normalize_db_path(config_path)
+
+    return LEGACY_DEFAULT_DB_PATH
+
+
+def set_default_db_path(path):
+    config = load_config()
+    config['db_path'] = normalize_db_path(path)
+    save_config(config)
 
 
 def get_connection():
-    conn = sqlite3.connect(DB_PATH)
+    db_path = get_db_path()
+    os.makedirs(os.path.dirname(db_path), exist_ok=True)
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     conn.execute('PRAGMA journal_mode=WAL')
     return conn

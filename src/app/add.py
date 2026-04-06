@@ -6,7 +6,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
-from db import init_db, add_entry, set_setting
+from db import init_db, add_entry, get_db_path, set_default_db_path, set_setting
 
 UI_MODES = {'light', 'dark'}
 
@@ -23,10 +23,18 @@ def main():
     group.add_argument('--quote', '--q', metavar='TEXT', dest='quote', help='save text as a quote')
     group.add_argument('--file', '--f', metavar='PATH', dest='file', help='save a file (image, video, or other)')
     group.add_argument('--empty-page', '--e', action='store_true', dest='empty_page', help='insert an intentional empty page')
+    group.add_argument('--db', metavar='PATH', dest='db', help='set the default archive.db path')
     group.add_argument('--ui', metavar='MODE', dest='ui', help='set viewer theme: light or dark')
     parser.add_argument('text', nargs='?', help='raw text to save')
 
     args = parser.parse_args()
+
+    if args.db:
+        set_default_db_path(args.db)
+        init_db()
+        print(f'set db path to {get_db_path()}')
+        return
+
     init_db()
 
     if args.link:

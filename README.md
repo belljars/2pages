@@ -10,6 +10,8 @@ A small local archive for short text, links, code snippets, and files. Learn to 
 
 This initializes the database and installs the `2p` command to `~/.local/bin/2p`.
 
+The archive lives in `archive.db` next to the repo by default. You can move it and persist that choice with `2p --db /path/to/archive.db`.
+
 ## Usage
 
 Start the viewer:
@@ -29,6 +31,7 @@ Add content:
 2p --c 'print("hello")'
 2p --f path/to/file
 2p --e
+2p --db ~/journals/archive.db
 2p --ui dark
 echo "text from stdin" | 2p
 ```

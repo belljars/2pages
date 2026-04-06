@@ -12,6 +12,7 @@
 #   2p --quote "text"          save text as a quote
 #   2p --code "snippet"        save a code snippet
 #   2p --file path/to/file     save an image, video, or other file
+#   2p --db ~/journals/a.db    set the default journal database path
 #   2p --ui dark               set the viewer theme
 #   echo "text" | 2p           save text from stdin
 
